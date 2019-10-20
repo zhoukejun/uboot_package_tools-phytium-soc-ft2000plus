@@ -1,0 +1,34 @@
+#!/bin/bash
+
+fw=atf-u-boot-ft2000plus.bin
+
+if [ ! -f "bl1.bin" ]; then
+      echo "can not find file : bl1.bin"
+      exit 1
+fi
+
+if [ ! -f "fiptool_arm" ]; then
+      echo "can not find file : fiptool"
+      exit 1
+fi
+
+if [ ! -f "fip.bin" ]; then
+      echo "can not find file : fip.bin"
+      exit 1
+fi
+
+cp  bl1.bin     $fw
+dd  if=phyinit-201707.bin of=$fw  bs=1M  seek=1
+dd  if=fip.bin            of=$fw  bs=1M  seek=2
+
+# check output file : u-boot-thin.bin
+if [ ! -f $fw ]; then
+      echo "can not find file : $fw."
+      exit 1
+fi
+
+echo
+echo "    generate $fw OK."
+echo "   " `du -b $fw`
+echo
+
